@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "254196420315",
+    "firebase_url": "https://water-depot-4338a.firebaseio.com",
+    "project_id": "water-depot-4338a",
+    "storage_bucket": "water-depot-4338a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254196420315:android:449e09e5babbc19e4a46fe",
+        "android_client_info": {
+          "package_name": "com.bataxdev.waterdepot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254196420315-jc84i4tj4jb3tmcgvdbugrqfrogtbhih.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8AQtQRRjOrzHTa7fm6OW8OjvgfpZGtwM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254196420315-jc84i4tj4jb3tmcgvdbugrqfrogtbhih.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

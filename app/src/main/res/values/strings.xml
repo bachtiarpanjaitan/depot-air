@@ -1,0 +1,47 @@
+<resources>
+    <string name="web_id_client">254196420315-jc84i4tj4jb3tmcgvdbugrqfrogtbhih.apps.googleusercontent.com</string>
+
+    <string name="app_name">Depot Air Online</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Administrator</string>
+    <string name="nav_header_subtitle">admin@admin.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Pengaturan</string>
+    <string name="action_logout">Keluar</string>
+
+    <string name="menu_home">Beranda</string>
+    <string name="menu_order">Pesanan</string>
+    <string name="menu_profile">Profil</string>
+    <string name="menu_setting">Pengaturan</string>
+
+    <string name="title_activity_login">Depot Air Online</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Login</string>
+    <string name="action_sign_in_google">Akun Google</string>
+    <string name="action_register">Daftar Akun</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+</resources>
