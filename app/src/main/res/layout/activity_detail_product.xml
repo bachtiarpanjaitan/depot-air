@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".DetailProductActivity"
+        tools:deviceIds="wear"
+        android:padding="@dimen/box_inset_layout_padding">
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/inner_frame_layout_padding">
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <RelativeLayout android:layout_width="match_parent"
+                        android:padding="5dp"
+                        android:layout_height="match_parent">
+
+
+                <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:id="@+id/image"
+                        android:padding="2dp"
+                        android:cropToPadding="true"
+                        android:src="@mipmap/ic_product_default"
+                        android:background="@color/colorPrimary"
+                        android:layout_alignParentTop="true"/>
+                <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp" android:layout_below="@id/image"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/price"
+                        android:text="Rp.1000,-"
+                        android:textFontWeight="800"
+                        android:padding="10dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:layout_below="@+id/image"
+                        android:textSize="35sp"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/unit"
+                        android:text="/ Galon"
+                        android:textFontWeight="200"
+                        android:padding="10dp"
+                        android:layout_below="@+id/image"
+                        android:layout_toRightOf="@+id/price"
+                        android:paddingBottom="0dp"
+                        android:textSize="35sp"/>
+                <TextView
+                        android:text="Rp.1000"
+                        android:layout_width="match_parent"
+                        android:layout_below="@+id/price"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textAlignment="textStart"
+                        android:textFontWeight="800"
+                        android:textSize="25dp"
+                        android:padding="10dp"
+                        android:textColor="@color/red"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/discount"/>
+                <TextView
+                        android:text="Keterangan Produk"
+                        android:layout_width="match_parent"
+                        android:layout_below="@+id/discount"
+                        android:padding="10dp"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/description"/>
+                <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:id="@+id/spacer2"
+                        android:layout_below="@id/description"/>
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/spacer2"
+                        android:padding="10dp"
+                        android:hint="Masukkan Jumlah Pesanan"
+                        android:inputType="number"
+                        android:id="@+id/order_number"/>
+                <Button
+                        android:text="@string/order_now"
+                        android:layout_width="wrap_content"
+                        android:padding="10dp"
+                        android:layout_below="@id/order_number"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btn_order_now"/>
+
+            </RelativeLayout>
+        </ScrollView>
+
+    </FrameLayout>
+</androidx.wear.widget.BoxInsetLayout>

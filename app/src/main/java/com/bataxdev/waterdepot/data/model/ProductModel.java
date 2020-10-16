@@ -16,6 +16,7 @@ public class ProductModel implements Serializable {
     private String image;
     private String unit;
     private String uid;
+    private String key;
 
     public ProductModel(){}
 
@@ -25,7 +26,8 @@ public class ProductModel implements Serializable {
             String keterangan,
             long potongan,
             String gambar,
-            String satuan
+            String satuan,
+            String key
         ){
         this.name = name;
         this.price = harga;
@@ -33,6 +35,7 @@ public class ProductModel implements Serializable {
         this.discount = potongan;
         this.image = gambar;
         this.unit = satuan;
+        this.key = key;
     }
 
     public Map<String, Object> toMap(DataSnapshot child){
@@ -101,5 +104,13 @@ public class ProductModel implements Serializable {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

@@ -38,6 +38,7 @@ public class HomeFragment extends Fragment {
                 for(DataSnapshot child : snapshot.getChildren()){
                     ProductModel product;
                     product = child.getValue(ProductModel.class);
+                    product.setKey(child.getKey());
                     products.add(product);
                 }
 
