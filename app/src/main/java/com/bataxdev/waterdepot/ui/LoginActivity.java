@@ -64,7 +64,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
-                            Log.d("TASK",task.toString());
                             if(task.isSuccessful()){
                                 loading.setProgress(100, true);
                                 loading.setVisibility(View.INVISIBLE);
