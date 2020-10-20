@@ -1,32 +1,25 @@
 package com.bataxdev.waterdepot.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bataxdev.waterdepot.DetailProductActivity;
-import com.bataxdev.waterdepot.MainActivity;
 import com.bataxdev.waterdepot.R;
 import com.bataxdev.waterdepot.data.model.ProductModel;
-import com.bataxdev.waterdepot.helper.DownloadImageTask;
-import com.bataxdev.waterdepot.ui.LoginActivity;
-import com.bataxdev.waterdepot.ui.home.HomeFragment;
+import com.bataxdev.waterdepot.ui.product_detail.ProductDetailFragment;
 import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
-import android.widget.Toast;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
 
@@ -54,9 +47,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         productView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, DetailProductActivity.class);
-                intent.putExtra("PRODUCT_ID",products.get(position).getKey());
-                context.startActivity(intent);
+                Bundle  data = new Bundle();
+                data.putString("PRODUCT_ID", products.get(position).getKey());
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                Fragment detailFragment = new ProductDetailFragment();
+                detailFragment.setArguments(data);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, detailFragment).addToBackStack(null).commit();
+
             }
         });
     }

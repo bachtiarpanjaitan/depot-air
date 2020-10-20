@@ -29,17 +29,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
-    @Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null)
-        {
-            Intent main = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(main);
-        }
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

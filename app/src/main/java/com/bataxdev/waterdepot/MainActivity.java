@@ -38,22 +38,19 @@ public class MainActivity extends AppCompatActivity {
     private boolean user_is_verified;
     private String user_phone_number;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser == null)
+        {
+            Intent login = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(login);
+        }
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -71,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         TextView profileName = headerView.findViewById(R.id.nav_header_username);
         TextView profileEmail = headerView.findViewById(R.id.nav_header_email);
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         if(currentUser != null){
             this.user_name = currentUser.getDisplayName();
             this.user_email  = currentUser.getEmail();

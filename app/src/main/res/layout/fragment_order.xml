@@ -3,12 +3,23 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
+        android:background="@android:color/white"
         android:layout_height="match_parent"
+        android:id="@+id/frame_order"
         tools:context=".ui.order.OrderFragment">
-
     <TextView
+            android:text="Tidak ada Data"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Hello"/>
-
+            android:visibility="invisible"
+            android:textAlignment="center"
+            android:textFontWeight="800"
+            android:textSize="30dp"
+            android:gravity="center"
+            android:id="@+id/no_data"/>
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/rv_order"
+            android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
 </FrameLayout>

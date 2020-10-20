@@ -42,12 +42,11 @@ public class HomeFragment extends Fragment {
                     products.add(product);
                 }
 
-                Log.d("PRODUK: ", String.valueOf(products.size()));
-
                 RecyclerView rv_product = getActivity().findViewById(R.id.rv_product);
                 LinearLayoutManager llm = new LinearLayoutManager(getActivity());
                 ProductAdapter adapter = new ProductAdapter(products,getActivity());
                 rv_product.setLayoutManager(llm);
+                rv_product.setHasFixedSize(true);
                 rv_product.setAdapter(adapter);
             }
 

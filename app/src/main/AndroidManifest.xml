@@ -15,31 +15,18 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
 
-        <!--
-               Set to true if your app is Standalone, that is, it does not require the handheld
-               app to run.
-        -->
-        <meta-data
-                android:name="com.google.android.wearable.standalone"
-                android:value="true"/>
-
-        <activity
-                android:name=".DetailProductActivity"
-                android:label="@string/title_activity_detail_product">
-        </activity>
         <activity
                 android:name=".ui.LoginActivity"
                 android:label="@string/title_activity_login">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity
                 android:name=".MainActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
     </application>
 
