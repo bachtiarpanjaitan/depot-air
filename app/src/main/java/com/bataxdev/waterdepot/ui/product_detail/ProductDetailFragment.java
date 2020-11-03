@@ -47,6 +47,7 @@ public class ProductDetailFragment extends Fragment {
         final String order_id = getArguments().getString("ORDER_ID");
 
         final ImageView image = view.findViewById(R.id.image);
+        final TextView name = view.findViewById(R.id.name);
         final TextView price = view.findViewById(R.id.price);
         final TextView unit = view.findViewById(R.id.unit);
         final TextView discount = view.findViewById(R.id.discount);
@@ -58,10 +59,11 @@ public class ProductDetailFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 ProductModel product = snapshot.getValue(ProductModel.class);
-                if(product.getImage() != ""){
+                if(product.getImage() != "" && !product.getImage().isEmpty()){
                     Picasso.get().load(product.getImage()).into(image);
                 }
                 unit.setText("/ "+ product.getUnit());
+                name.setText(product.getName());
                 price.setText("Harga : Rp."+ product.getPrice());
                 discount.setText("Diskon : Rp."+ product.getDiscount());
                 description.setText(product.getDescription());

@@ -53,60 +53,63 @@ public class OrderAdapter  extends RecyclerView.Adapter<OrderAdapter.ViewHolder>
         FirebaseDatabase.getInstance().getReference("products").child(product_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                //Log.i("PRODUCT:",snapshot.toString());
+
                 ProductModel product = snapshot.getValue(ProductModel.class);
+                Log.i("PRODUK:",product.toString());
+                if(product != null)
+                {
+                    Long discount = product.getDiscount();
+                    Long price = product.getPrice();
+                    Long total =  (order_value * price) - discount;
 
-                Long discount = product.getDiscount();
-                Long price = product.getPrice();
-                Long total =  (order_value * price) - discount;
+                    NumberFormat nf = NumberFormat.getInstance(new Locale("us","US"));
+                    String string_total = nf.format(total);
 
-                NumberFormat nf = NumberFormat.getInstance(new Locale("us","US"));
-                String string_total = nf.format(total);
-
-                holder.product_order_name.setText(product.getName());
-                holder.order_number.setText("Jumlah : "+Double.toString(order_value));
-                holder.total_price.setText("Total : Rp."+ string_total);
-                holder.status.setText(orders.get(position).getStatus());
-                holder.datetime.setText(orders.get(position).getDatetime());
-                if(product.getImage() != ""){
-                    Picasso.get().load(product.getImage()).into(holder.product_order_image);
-                }
-                holder.options.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PopupMenu popupMenu = new PopupMenu(v.getContext(), holder.options);
-                        popupMenu.inflate(R.menu.order_menu);
-                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                switch (item.getItemId()){
-                                    case R.id.delete_order:
-                                        if(orders.get(position).getStatus().equals(EnumOrderStatus.OPEN.getName())) {
-                                            FirebaseDatabase.getInstance().getReference("orders").child(orders.get(position).getKey()).removeValue();
-                                        }else Toast.makeText(v.getContext(), "Pesanan sudah tidak bisa dihapus",0).show();
-                                        break;
-                                    case R.id.edit_order:
-                                        if(orders.get(position).getStatus().equals(EnumOrderStatus.OPEN.getName())) {
-                                            Bundle data = new Bundle();
-                                            data.putString("PRODUCT_ID", orders.get(position).getProduct_id());
-                                            data.putInt("VALUE_ORDER", orders.get(position).getOrder_value());
-                                            data.putBoolean("HAS_EDIT", true);
-                                            data.putString("ORDER_ID", orders.get(position).getKey());
-                                            Fragment pdf = new ProductDetailFragment();
-                                            pdf.setArguments(data);
-                                            AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                                            activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, pdf).addToBackStack(null).commit();
-                                        }else Toast.makeText(v.getContext(), "Pesanan sudah tidak bisa diubah lagi",0).show();
-                                        break;
-                                }
-
-                                return false;
-                            }
-                        });
-
-                        popupMenu.show();
+                    holder.product_order_name.setText(product.getName());
+                    holder.order_number.setText("Jumlah : "+Double.toString(order_value));
+                    holder.total_price.setText("Total : Rp."+ string_total);
+                    holder.status.setText(orders.get(position).getStatus());
+                    holder.datetime.setText(orders.get(position).getDatetime());
+                    if(product.getImage() != "" && !product.getImage().isEmpty()){
+                        Picasso.get().load(product.getImage()).into(holder.product_order_image);
                     }
-                });
+                    holder.options.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            PopupMenu popupMenu = new PopupMenu(v.getContext(), holder.options);
+                            popupMenu.inflate(R.menu.order_menu);
+                            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    switch (item.getItemId()){
+                                        case R.id.delete_order:
+                                            if(orders.get(position).getStatus().equals(EnumOrderStatus.OPEN.getName())) {
+                                                FirebaseDatabase.getInstance().getReference("orders").child(orders.get(position).getKey()).removeValue();
+                                            }else Toast.makeText(v.getContext(), "Pesanan sudah tidak bisa dihapus",0).show();
+                                            break;
+                                        case R.id.edit_order:
+                                            if(orders.get(position).getStatus().equals(EnumOrderStatus.OPEN.getName())) {
+                                                Bundle data = new Bundle();
+                                                data.putString("PRODUCT_ID", orders.get(position).getProduct_id());
+                                                data.putInt("VALUE_ORDER", orders.get(position).getOrder_value());
+                                                data.putBoolean("HAS_EDIT", true);
+                                                data.putString("ORDER_ID", orders.get(position).getKey());
+                                                Fragment pdf = new ProductDetailFragment();
+                                                pdf.setArguments(data);
+                                                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                                                activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, pdf).addToBackStack(null).commit();
+                                            }else Toast.makeText(v.getContext(), "Pesanan sudah tidak bisa diubah lagi",0).show();
+                                            break;
+                                    }
+
+                                    return false;
+                                }
+                            });
+
+                            popupMenu.show();
+                        }
+                    });
+                }
             }
 
             @Override

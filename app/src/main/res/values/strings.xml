@@ -46,4 +46,8 @@
     <string name="attachment_summary_off">Hanya mengunduh lampiran secara manual</string>
     <string name="title_activity_detail_product">Detail Produk</string>
     <string name="order_now">Pesan Sekarang</string>
+
+    <string name="product">Produk</string>
+    <string name="add_product">Tambah Produk</string>
+    <string name="order_list">Daftar Pesanan</string>
 </resources>

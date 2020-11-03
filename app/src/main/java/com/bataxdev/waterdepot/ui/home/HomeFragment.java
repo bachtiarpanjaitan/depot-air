@@ -42,12 +42,14 @@ public class HomeFragment extends Fragment {
                     products.add(product);
                 }
 
-                RecyclerView rv_product = getActivity().findViewById(R.id.rv_product);
-                LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-                ProductAdapter adapter = new ProductAdapter(products,getActivity());
-                rv_product.setLayoutManager(llm);
-                rv_product.setHasFixedSize(true);
-                rv_product.setAdapter(adapter);
+                try {
+                    RecyclerView rv_product = getActivity().findViewById(R.id.rv_product);
+                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                    ProductAdapter adapter = new ProductAdapter(products,getActivity());
+                    rv_product.setLayoutManager(llm);
+                    rv_product.setHasFixedSize(true);
+                    rv_product.setAdapter(adapter);
+                }catch (Exception e){}
             }
 
             @Override

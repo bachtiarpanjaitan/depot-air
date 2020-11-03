@@ -67,14 +67,29 @@ public class OrderFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
 
-                ArrayList<OrderModel> orders = new ArrayList<>();
+                final ArrayList<OrderModel> orders = new ArrayList<>();
                 for(DataSnapshot child : snapshot.getChildren()){
                     OrderModel order;
                     order = child.getValue(OrderModel.class);
                     order.setKey(child.getKey());
                     if(order.getUser_email().equals(currentUser.getEmail())){
-                        orders.add(order);
+                        boolean deleted = false;
+                        FirebaseDatabase.getInstance().getReference("products").child(order.getProduct_id()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                                if(!snapshot.exists()){
+                                    FirebaseDatabase.getInstance().getReference("orders").child(order.getKey()).removeValue();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                            }
+                        });
+
                     }
+                    orders.add(order);
                 }
 
                 TextView no_data = view.findViewById(R.id.no_data);

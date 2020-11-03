@@ -12,10 +12,22 @@
             tools:layout="@layout/fragment_home"/>
 
     <fragment
+            android:id="@+id/nav_product"
+            android:name="com.bataxdev.waterdepot.ui.product.ProductFragment"
+            android:label="@string/add_product"
+            tools:layout="@layout/product_fragment"/>
+
+    <fragment
             android:id="@+id/nav_order"
             android:name="com.bataxdev.waterdepot.ui.order.OrderFragment"
             android:label="@string/menu_order"
             tools:layout="@layout/fragment_order"/>
+
+    <fragment
+            android:id="@+id/nav_order_list"
+            android:name="com.bataxdev.waterdepot.ui.order_list.OrderListFragment"
+            android:label="@string/order_list"
+            tools:layout="@layout/order_list_fragment"/>
 
     <fragment
             android:id="@+id/nav_profile"

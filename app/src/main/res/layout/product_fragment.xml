@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:background="@android:color/white"
+        android:layout_height="match_parent"
+        android:id="@+id/frame_product"
+        tools:context=".ui.product.ProductFragment">
+<ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout android:layout_width="match_parent"
+                android:padding="5dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                        android:text="Tambah Produk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:textSize="20dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        android:id="@+id/title_form"/>
+                <LinearLayout
+                        android:orientation="vertical" 
+                        android:layout_width="fill_parent"
+                        android:padding="10dp"
+                        android:id="@+id/c_name"
+                        android:layout_below="@+id/title_form"
+                        android:layout_height="wrap_content">
+                        <TextView 
+                                android:layout_width="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:paddingBottom="5dp"
+                                android:layout_height="wrap_content" 
+                                android:text="Nama Produk *"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:inputType="text"
+                                android:background="@drawable/text_rounded"
+                                android:id="@+id/name"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_below="@id/c_name"
+                        android:padding="10dp"
+                        android:id="@+id/c_price" 
+                        android:layout_width="fill_parent" 
+                        android:layout_height="wrap_content">
+                        <TextView 
+                                android:layout_width="wrap_content" 
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:paddingBottom="5dp"
+                                android:text="Harga Produk *"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:background="@drawable/text_rounded"
+                                android:inputType="number"
+                                android:id="@+id/price"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="vertical" 
+                        android:layout_width="fill_parent"
+                        android:id="@+id/c_discount"
+                        android:padding="10dp"
+                        android:layout_below="@id/c_price" 
+                        android:layout_height="wrap_content">
+                        <TextView 
+                                android:layout_width="wrap_content" 
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:paddingBottom="5dp"
+                                android:text="Diskon Produk"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:background="@drawable/text_rounded"
+                                android:inputType="number"
+                                android:id="@+id/discount"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="vertical" 
+                        android:layout_width="fill_parent"
+                        android:id="@+id/c_unit"
+                        android:padding="10dp"
+                        android:layout_below="@id/c_discount"
+                        android:layout_height="wrap_content">
+                        <TextView 
+                                android:layout_width="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:paddingBottom="5dp"
+                                android:layout_height="wrap_content" 
+                                android:text="Satuan Produk *"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:background="@drawable/text_rounded"
+                                android:inputType="text"
+                                android:id="@+id/unit"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="vertical" 
+                        android:layout_width="fill_parent"
+                        android:layout_below="@id/c_unit"
+                        android:padding="10dp"
+                        android:id="@+id/c_description"
+                        android:layout_height="wrap_content">
+                        <TextView 
+                                android:layout_width="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:paddingBottom="5dp"
+                                android:layout_height="wrap_content" 
+                                android:text="Keterangan"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:inputType="textMultiLine"
+                                android:background="@drawable/text_rounded"
+                                android:lines = "5"
+                                android:ems="10"
+                                android:gravity="start|top"
+                                android:id="@+id/description"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="vertical" 
+                        android:layout_width="fill_parent"
+                        android:id="@+id/c_image"
+                        android:padding="10dp"
+                        android:layout_below="@id/c_description"
+                        android:layout_height="wrap_content">
+                        <TextView 
+                                android:layout_width="wrap_content"
+                                android:paddingLeft="5dp"
+                                android:paddingBottom="5dp"
+                                android:layout_height="wrap_content" 
+                                android:text="Gambar Produk (URL)"/>
+                        <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:hint="https://google.com/image.jpg"
+                                android:background="@drawable/text_rounded"
+                                android:inputType="textUri"
+                                android:id="@+id/image"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:padding="10dp"
+                        android:layout_below="@id/c_image"
+                        android:layout_height="wrap_content">
+
+
+                        <Button
+                                android:text="Simpan Produk"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/btn_save_product"/>
+                </LinearLayout>
+
+        </RelativeLayout>
+        
+</ScrollView>
+
+        
+
+</FrameLayout>

@@ -52,6 +52,17 @@
                     android:ellipsize="end"
                     android:layout_toRightOf="@id/product_image"
                     android:layout_below="@+id/product_price"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:id="@+id/option_product"
+                    android:text="&#8942;"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="15dp"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:layout_height="wrap_content"/>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>
