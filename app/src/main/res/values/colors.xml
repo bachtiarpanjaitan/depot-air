@@ -5,4 +5,6 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="trans">#80000000</color>
     <color name="red">#A50101</color>
+    <color name="white">#ffffff</color>
+    <color name="gray">#E4E4E4</color>
 </resources>

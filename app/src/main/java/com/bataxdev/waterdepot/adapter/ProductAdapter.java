@@ -20,7 +20,9 @@ import com.bataxdev.waterdepot.R;
 import com.bataxdev.waterdepot.data.Enumerable.EnumOrderStatus;
 import com.bataxdev.waterdepot.data.model.ProductModel;
 import com.bataxdev.waterdepot.ui.product_detail.ProductDetailFragment;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.*;
 import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,6 +32,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     private List<ProductModel> products;
     private Context context;
+    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    DatabaseReference user = FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid());
     @NonNull
     @NotNull
     @Override
@@ -67,6 +71,24 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(v.getContext(), holder.options);
                 popupMenu.inflate(R.menu.product_menu);
+                MenuItem delete_product = popupMenu.getMenu().findItem(R.id.delete_product);
+
+                user.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                        if(snapshot.exists())
+                        {
+                            delete_product.setVisible(false);
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                    }
+                });
+
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {

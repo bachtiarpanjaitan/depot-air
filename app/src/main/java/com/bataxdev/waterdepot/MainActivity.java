@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.bataxdev.waterdepot.data.model.ProductModel;
+import com.bataxdev.waterdepot.data.model.UserModel;
 import com.bataxdev.waterdepot.helper.DownloadImageTask;
 import com.bataxdev.waterdepot.ui.LoginActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -25,6 +26,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -38,23 +41,48 @@ public class MainActivity extends AppCompatActivity {
     private boolean user_is_verified;
     private String user_phone_number;
 
+    private DatabaseReference user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser == null)
+        if(currentUser == null || currentUser.getUid().isEmpty())
         {
             Intent login = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(login);
+            finish();
         }
+
+        user = FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid());
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
+        user.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                {
+                    navigationView.getMenu().findItem(R.id.nav_product).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_order_list).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_report).setVisible(false);
+                }else{
+                    navigationView.getMenu().findItem(R.id.nav_order).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_order, R.id.nav_profile, R.id.nav_setting)
                 .setDrawerLayout(drawer)

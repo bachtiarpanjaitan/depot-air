@@ -21,6 +21,8 @@ import com.bataxdev.waterdepot.data.Enumerable.EnumOrderStatus;
 import com.bataxdev.waterdepot.data.model.OrderModel;
 import com.bataxdev.waterdepot.data.model.ProductModel;
 import com.bataxdev.waterdepot.ui.product_detail.ProductDetailFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +38,8 @@ public class OrderAdapter  extends RecyclerView.Adapter<OrderAdapter.ViewHolder>
 
     private List<OrderModel> orders;
     private Context context;
+    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    DatabaseReference user = FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid());
 
     @NonNull
     @NotNull
@@ -55,7 +59,7 @@ public class OrderAdapter  extends RecyclerView.Adapter<OrderAdapter.ViewHolder>
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
 
                 ProductModel product = snapshot.getValue(ProductModel.class);
-                Log.i("PRODUK:",product.toString());
+
                 if(product != null)
                 {
                     Long discount = product.getDiscount();
@@ -76,37 +80,75 @@ public class OrderAdapter  extends RecyclerView.Adapter<OrderAdapter.ViewHolder>
                     holder.options.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            PopupMenu popupMenu = new PopupMenu(v.getContext(), holder.options);
-                            popupMenu.inflate(R.menu.order_menu);
-                            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem item) {
-                                    switch (item.getItemId()){
-                                        case R.id.delete_order:
-                                            if(orders.get(position).getStatus().equals(EnumOrderStatus.OPEN.getName())) {
-                                                FirebaseDatabase.getInstance().getReference("orders").child(orders.get(position).getKey()).removeValue();
-                                            }else Toast.makeText(v.getContext(), "Pesanan sudah tidak bisa dihapus",0).show();
-                                            break;
-                                        case R.id.edit_order:
-                                            if(orders.get(position).getStatus().equals(EnumOrderStatus.OPEN.getName())) {
-                                                Bundle data = new Bundle();
-                                                data.putString("PRODUCT_ID", orders.get(position).getProduct_id());
-                                                data.putInt("VALUE_ORDER", orders.get(position).getOrder_value());
-                                                data.putBoolean("HAS_EDIT", true);
-                                                data.putString("ORDER_ID", orders.get(position).getKey());
-                                                Fragment pdf = new ProductDetailFragment();
-                                                pdf.setArguments(data);
-                                                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                                                activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, pdf).addToBackStack(null).commit();
-                                            }else Toast.makeText(v.getContext(), "Pesanan sudah tidak bisa diubah lagi",0).show();
-                                            break;
-                                    }
 
-                                    return false;
+                            user.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        PopupMenu popupMenu = new PopupMenu(v.getContext(), holder.options);
+                                        popupMenu.inflate(R.menu.order_menu);
+                                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                            @Override
+                                            public boolean onMenuItemClick(MenuItem item) {
+                                                switch (item.getItemId()){
+                                                    case R.id.delete_order:
+                                                        if(orders.get(position).getStatus().equals(EnumOrderStatus.OPEN.getName())) {
+                                                            FirebaseDatabase.getInstance().getReference("orders").child(orders.get(position).getKey()).removeValue();
+                                                        }else Toast.makeText(v.getContext(), "Pesanan sudah tidak bisa dihapus",0).show();
+                                                        break;
+                                                    case R.id.edit_order:
+                                                        if(orders.get(position).getStatus().equals(EnumOrderStatus.OPEN.getName())) {
+                                                            Bundle data = new Bundle();
+                                                            data.putString("PRODUCT_ID", orders.get(position).getProduct_id());
+                                                            data.putInt("VALUE_ORDER", orders.get(position).getOrder_value());
+                                                            data.putBoolean("HAS_EDIT", true);
+                                                            data.putString("ORDER_ID", orders.get(position).getKey());
+                                                            Fragment pdf = new ProductDetailFragment();
+                                                            pdf.setArguments(data);
+                                                            AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                                                            activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, pdf).addToBackStack(null).commit();
+                                                        }else Toast.makeText(v.getContext(), "Pesanan sudah tidak bisa diubah lagi",0).show();
+                                                        break;
+                                                }
+
+                                                return false;
+                                            }
+                                        });
+                                        popupMenu.show();
+                                    }else{
+                                        PopupMenu popupMenu = new PopupMenu(v.getContext(), holder.options);
+                                        popupMenu.inflate(R.menu.admin_order_menu);
+                                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                            @Override
+                                            public boolean onMenuItemClick(MenuItem item) {
+                                                switch (item.getItemId()){
+                                                    case R.id.delete_order:
+                                                        if(orders.get(position).getStatus().equals(EnumOrderStatus.OPEN.getName())) {
+                                                            FirebaseDatabase.getInstance().getReference("orders").child(orders.get(position).getKey()).removeValue();
+                                                        }else Toast.makeText(v.getContext(), "Pesanan sudah tidak bisa dihapus",0).show();
+                                                        break;
+                                                    case R.id.admin_sending_order:
+                                                        break;
+                                                    case R.id.admin_close_order:
+                                                        break;
+                                                }
+
+                                                return false;
+                                            }
+                                        });
+                                        popupMenu.show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
                                 }
                             });
 
-                            popupMenu.show();
+
+
+
                         }
                     });
                 }

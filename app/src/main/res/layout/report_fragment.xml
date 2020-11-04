@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:table="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="always"
+        android:isScrollContainer="true"
+        tools:context=".ui.report.ReportFragment">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_height="wrap_content">
+
+                <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="date"
+                        android:layout_marginRight="10dp"
+                        android:hint="Dari Tanggal"
+                        android:background="@drawable/text_rounded"
+                        android:ems="10"
+                        android:id="@+id/fromdate"
+                        android:layout_weight="1"/>
+                <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="date"
+                        android:background="@drawable/text_rounded"
+                        android:hint="Hingga Tanggal"
+                        android:layout_marginRight="10dp"
+                        android:ems="10"
+                        android:id="@+id/todate"
+                        android:layout_weight="1"/>
+                <Button
+                        android:background="@drawable/ic_search2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:width="30dp"
+                        android:height="20dp"
+                        android:id="@+id/btn_search"
+                        android:layout_weight="1"/>
+            </LinearLayout>
+           <LinearLayout android:layout_width="match_parent"
+                         android:orientation="vertical"
+                         android:layout_height="wrap_content">
+               <HorizontalScrollView
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent">
+                   <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+                                 android:orientation="vertical">
+                       <de.codecrafters.tableview.TableView
+                               android:layout_height="match_parent"
+                               android:id="@+id/tableview"
+                               android:padding="5dp"
+                               table:tableView_columnCount="5"
+                               android:layout_width="match_parent">
+                       </de.codecrafters.tableview.TableView>
+                   </LinearLayout>
+               </HorizontalScrollView>
+           </LinearLayout>
+   </LinearLayout>
+
+</FrameLayout>

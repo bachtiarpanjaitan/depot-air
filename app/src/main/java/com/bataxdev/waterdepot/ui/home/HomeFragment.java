@@ -2,9 +2,7 @@ package com.bataxdev.waterdepot.ui.home;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,12 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bataxdev.waterdepot.R;
 import com.bataxdev.waterdepot.adapter.ProductAdapter;
 import com.bataxdev.waterdepot.data.model.ProductModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class HomeFragment extends Fragment {
+
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         return root;
@@ -30,7 +31,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         FirebaseDatabase.getInstance().getReference("products").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
@@ -57,6 +57,11 @@ public class HomeFragment extends Fragment {
 
         });
 
+
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull @NotNull Menu menu) {
 
     }
 }

@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bataxdev.waterdepot.MainActivity;
 import com.bataxdev.waterdepot.R;
+import com.bataxdev.waterdepot.data.model.UserModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -22,6 +23,9 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import org.jetbrains.annotations.NotNull;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -41,7 +45,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
         setContentView(R.layout.activity_login);
 
-        final ProgressBar loading = findViewById(R.id.loading);
+        //final ProgressBar loading = findViewById(R.id.loading);
         Button btnLogin = findViewById(R.id.login);
         SignInButton btnLoginGoogle = findViewById(R.id.sign_in_google);
         btnLogin.setEnabled(true);
@@ -58,20 +62,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(LoginActivity.this, "Password tidak boleh kosong",0).show();
                 }
 
-                loading.setProgress(0,true);
-                loading.setVisibility(View.VISIBLE);
+                //loading.setProgress(0,true);
+                //loading.setVisibility(View.VISIBLE);
                 mAuth.signInWithEmailAndPassword(username.getText().toString(),password.getText().toString())
                     .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
-                                loading.setProgress(100, true);
-                                loading.setVisibility(View.INVISIBLE);
+                                //loading.setProgress(100, true);
+                                //loading.setVisibility(View.INVISIBLE);
                                 Intent main = new Intent(LoginActivity.this,MainActivity.class);
                                 startActivity(main);
                             }else{
                                 Toast.makeText(LoginActivity.this, "Gagal Login atau email password tidak dikenali",0).show();
-                                loading.setVisibility(View.INVISIBLE);
+                                //loading.setVisibility(View.INVISIBLE);
                             }
                         }
                     });
@@ -96,6 +100,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
+                if(account != null)
                 firebaseAuthWithGoogle(account.getIdToken());
             }catch (ApiException e){
 
@@ -105,26 +110,39 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void firebaseAuthWithGoogle(String idToken) {
         final ProgressBar loading = findViewById(R.id.loading);
-        loading.setProgress(0,true);
-        loading.setVisibility(View.VISIBLE);
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken,null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            loading.setProgress(100, true);
-                            loading.setVisibility(View.INVISIBLE);
-                            FirebaseUser user = mAuth.getCurrentUser();
+        try {
+            //loading.setProgress(0,true);
+            //loading.setVisibility(View.VISIBLE);
+            AuthCredential credential = GoogleAuthProvider.getCredential(idToken,null);
+            mAuth.signInWithCredential(credential)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                //loading.setProgress(100, true);
+                                //loading.setVisibility(View.INVISIBLE);
+                                FirebaseUser user = mAuth.getCurrentUser();
 
-                            Intent main = new Intent(LoginActivity.this,MainActivity.class);
-                            startActivity(main);
-                        }else{
-                            Toast.makeText(LoginActivity.this, "Gagal Login atau email password tidak dikenali",0).show();
-                            loading.setVisibility(View.INVISIBLE);
+                                DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users");
+
+                                users.child(user.getUid()).removeValue();
+
+                                UserModel user_model = new UserModel();
+                                user_model.setUsername(user.getDisplayName());
+                                user_model.setEmail(user.getEmail());
+                                user_model.setUid(user.getUid());
+                                user_model.setAdmin(false);
+                                users.child(user.getUid()).setValue(user_model);
+
+                                Intent main = new Intent(LoginActivity.this,MainActivity.class);
+                                startActivity(main);
+                            }else{
+                                Toast.makeText(LoginActivity.this, "Gagal Login atau email password tidak dikenali",0).show();
+                                //loading.setVisibility(View.INVISIBLE);
+                            }
                         }
-                    }
-                });
+                    });
+        }catch (Exception e){}
     }
 
     @Override
