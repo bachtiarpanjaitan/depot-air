@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bataxdev.waterdepot.R;
 import com.bataxdev.waterdepot.data.Enumerable.EnumOrderStatus;
 import com.bataxdev.waterdepot.data.model.ProductModel;
+import com.bataxdev.waterdepot.ui.product.ProductFragment;
 import com.bataxdev.waterdepot.ui.product_detail.ProductDetailFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,7 +50,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         holder.product_price.setTypeface(Typeface.MONOSPACE,1);
         holder.product_description.setText(products.get(position).getDescription());
         if(products.get(position).getImage() != "" && !products.get(position).getImage().isEmpty()){
-            Picasso.get().load(products.get(position).getImage()).into(holder.product_image);
+            Picasso.get().load(products.get(position).getImage())
+                    .centerCrop()
+                            .resize(100,100)
+                    .into(holder.product_image);
         }
 
         final CardView productView = holder.itemView.findViewById(R.id.product_list);
@@ -72,6 +76,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                 PopupMenu popupMenu = new PopupMenu(v.getContext(), holder.options);
                 popupMenu.inflate(R.menu.product_menu);
                 MenuItem delete_product = popupMenu.getMenu().findItem(R.id.delete_product);
+                MenuItem edit_product = popupMenu.getMenu().findItem(R.id.edit_product);
 
                 user.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -79,6 +84,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                         if(snapshot.exists())
                         {
                             delete_product.setVisible(false);
+                            edit_product.setVisible(false);
                         }
 
                     }
@@ -95,6 +101,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                         switch (item.getItemId()){
                             case R.id.delete_product:
                                 FirebaseDatabase.getInstance().getReference("products").child(products.get(position).getKey()).removeValue();
+                                break;
+                            case R.id.edit_product:
+                                Bundle  data = new Bundle();
+                                data.putString("PRODUCT_ID", products.get(position).getKey());
+                                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                                Fragment productFragment = new ProductFragment();
+                                productFragment.setArguments(data);
+                                activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, productFragment).addToBackStack(null).commit();
                                 break;
                         }
 

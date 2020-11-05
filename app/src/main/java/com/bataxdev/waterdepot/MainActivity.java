@@ -1,7 +1,14 @@
 package com.bataxdev.waterdepot;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -10,12 +17,11 @@ import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import com.bataxdev.waterdepot.data.model.ProductModel;
-import com.bataxdev.waterdepot.data.model.UserModel;
+import androidx.core.app.NotificationCompat;
 import com.bataxdev.waterdepot.helper.DownloadImageTask;
 import com.bataxdev.waterdepot.ui.LoginActivity;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -27,10 +33,8 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
+import com.google.firebase.messaging.FirebaseMessaging;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -42,46 +46,38 @@ public class MainActivity extends AppCompatActivity {
     private String user_phone_number;
 
     private DatabaseReference user;
+    private FirebaseUser currentUser;
+    private FirebaseAuth mAuth;
+    public static final String TAG = "MAIN_ACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser == null || currentUser.getUid().isEmpty())
+
+        //Get Token Notif
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<String> task) {
+                if(!task.isSuccessful()) {return;}
+                Log.i("TOKEN",task.getResult().toString());
+            }
+        });
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        if(currentUser == null || currentUser.getUid() == "" || currentUser.isAnonymous())
         {
-            Intent login = new Intent(MainActivity.this, LoginActivity.class);
+            Intent login = new Intent(this, LoginActivity.class);
             startActivity(login);
             finish();
+            return;
         }
-
-        user = FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid());
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-
-        user.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                if(snapshot.exists())
-                {
-                    navigationView.getMenu().findItem(R.id.nav_product).setVisible(false);
-                    navigationView.getMenu().findItem(R.id.nav_order_list).setVisible(false);
-                    navigationView.getMenu().findItem(R.id.nav_report).setVisible(false);
-                }else{
-                    navigationView.getMenu().findItem(R.id.nav_order).setVisible(false);
-                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_order, R.id.nav_profile, R.id.nav_setting)
@@ -96,6 +92,27 @@ public class MainActivity extends AppCompatActivity {
         TextView profileName = headerView.findViewById(R.id.nav_header_username);
         TextView profileEmail = headerView.findViewById(R.id.nav_header_email);
 
+        user = FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid());
+        user.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                {
+                    navigationView.getMenu().findItem(R.id.nav_product).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_order_list).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_report).setVisible(false);
+//                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
+                }else{
+                    navigationView.getMenu().findItem(R.id.nav_order).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
 
         if(currentUser != null){
             this.user_name = currentUser.getDisplayName();
@@ -111,6 +128,12 @@ public class MainActivity extends AppCompatActivity {
             if(this.user_name != null)  profileName.setText(this.user_name);
             profileEmail.setText(this.user_email);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 
     @Override
@@ -146,5 +169,31 @@ public class MainActivity extends AppCompatActivity {
         Intent login = new Intent(this, LoginActivity.class);
         startActivity(login);
         finish();
+    }
+
+    public void sendNotification(String title,String message, String channel_id){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+        String ChannelId = channel_id;
+        if(channel_id.isEmpty())ChannelId = getString(R.string.default_notification_channel_id);
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,ChannelId)
+                .setSmallIcon(R.drawable.ic_message)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            NotificationChannel notificationChannel = new NotificationChannel(ChannelId,"Notifikasi",NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
+        notificationManager.notify(0,notificationBuilder.build());
     }
 }

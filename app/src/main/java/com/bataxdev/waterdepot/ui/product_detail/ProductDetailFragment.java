@@ -1,8 +1,11 @@
 package com.bataxdev.waterdepot.ui.product_detail;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
@@ -13,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.bataxdev.waterdepot.MainActivity;
 import com.bataxdev.waterdepot.R;
 import com.bataxdev.waterdepot.data.Enumerable.EnumOrderStatus;
 import com.bataxdev.waterdepot.data.model.OrderModel;
@@ -25,8 +29,6 @@ import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 public class ProductDetailFragment extends Fragment {
 
@@ -106,11 +108,7 @@ public class ProductDetailFragment extends Fragment {
                     Toast.makeText(getContext(), "Pesanan gagal diubah",0).show();
                 }else{
                     Toast.makeText(getContext(), "Pesanan berhasil Diubah",0).show();
-                    Fragment orderFragment = new OrderFragment();
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frame_product_detail, orderFragment)
-                            .addToBackStack(null)
-                            .commit();
+                    getFragmentManager().popBackStack();
                 }
             }
         });
@@ -136,13 +134,8 @@ public class ProductDetailFragment extends Fragment {
                         Toast.makeText(getContext(), "Pesanan gagal disimpan",0).show();
                     }else{
                         Toast.makeText(getContext(), "Pesanan berhasil disimpan",0).show();
-                        Fragment orderFragment = new OrderFragment();
-                        FragmentManager fm = getFragmentManager();
-                        FragmentTransaction ft = fm.beginTransaction();
-                        ft.replace(R.id.frame_product_detail, orderFragment);
-                        ft.addToBackStack(null);
-                        ft.commit();
-
+                        ((MainActivity)getActivity()).sendNotification("Pesanan Baru",currentUser.getDisplayName()+" melakukan pemesanan sebanyak "+ order.getOrder_value(),getString(R.string.default_notification_channel_id));
+                        getFragmentManager().popBackStack();
                     }
                 }
             });
@@ -151,6 +144,8 @@ public class ProductDetailFragment extends Fragment {
         }
 
     }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

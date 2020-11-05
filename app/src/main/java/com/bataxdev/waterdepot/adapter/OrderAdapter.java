@@ -128,8 +128,14 @@ public class OrderAdapter  extends RecyclerView.Adapter<OrderAdapter.ViewHolder>
                                                         }else Toast.makeText(v.getContext(), "Pesanan sudah tidak bisa dihapus",0).show();
                                                         break;
                                                     case R.id.admin_sending_order:
+                                                        FirebaseDatabase.getInstance().getReference("orders")
+                                                                .child(orders.get(position).getKey())
+                                                                .child("status").setValue(EnumOrderStatus.SENDING.getName());
                                                         break;
                                                     case R.id.admin_close_order:
+                                                        FirebaseDatabase.getInstance().getReference("orders")
+                                                                .child(orders.get(position).getKey())
+                                                                .child("status").setValue(EnumOrderStatus.CLOSED.getName());
                                                         break;
                                                 }
 

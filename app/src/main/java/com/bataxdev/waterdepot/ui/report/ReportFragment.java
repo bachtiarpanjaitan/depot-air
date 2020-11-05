@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.bataxdev.waterdepot.MainActivity;
 import com.bataxdev.waterdepot.R;
+import com.bataxdev.waterdepot.data.Enumerable.EnumOrderStatus;
 import com.bataxdev.waterdepot.data.model.OrderModel;
 import com.bataxdev.waterdepot.data.model.ProductModel;
 import com.bataxdev.waterdepot.data.model.ReportModel;
@@ -32,8 +33,12 @@ import de.codecrafters.tableview.toolkit.TableDataRowBackgroundProviders;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ReportFragment extends Fragment {
@@ -52,6 +57,7 @@ public class ReportFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.report_fragment, container, false);
+        final String[][] DATA_EMPTY = {};
         final String[] TABLE_HEADER = {"Nama Produk","Harga","Diskon","Jumlah","Total"};
         ArrayList reports = new ArrayList<>();
 
@@ -105,7 +111,62 @@ public class ReportFragment extends Fragment {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), fromdate.getText() +" "+todate.getText(),0).show();
+                //Toast.makeText(getContext(), fromdate.getText() +" "+todate.getText(),0).show();
+                tableView.setDataAdapter(new SimpleTableDataAdapter(getContext(), DATA_EMPTY ));
+                reports.clear();
+                FirebaseDatabase.getInstance().getReference("orders").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                        for(DataSnapshot child : snapshot.getChildren()){
+                            OrderModel order = child.getValue(OrderModel.class);
+                            if(!order.getStatus().equals(EnumOrderStatus.CLOSED.getName())) continue;
+                            try {
+                                DateFormat date = new SimpleDateFormat("dd-MM-yyyy");
+                                Date fdate = date.parse(fromdate.getText().toString());
+                                Date ddate = date.parse(order.getDatetime());
+                                Date tdate = date.parse(todate.getText().toString());
+
+                                if(fdate.compareTo(ddate) > 0 || tdate.compareTo(ddate) < 0){
+                                    continue;
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            FirebaseDatabase.getInstance().getReference("products").child(order.getProduct_id()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull @NotNull DataSnapshot sn) {
+                                    ProductModel product = sn.getValue(ProductModel.class);
+
+                                    String[] row = {
+                                            product.getName(),
+                                            String.valueOf(product.getPrice()),
+                                            String.valueOf(product.getDiscount()),
+                                            String.valueOf(order.getOrder_value()),
+                                            String.valueOf((product.getPrice() * order.getOrder_value()) - product.getDiscount())
+                                    };
+                                    reports.add(row);
+                                    try{
+                                        tableView.setDataAdapter(new SimpleTableDataAdapter(getContext(), reports));
+                                    }catch (Exception e){}
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                                }
+                            });
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                    }
+                });
+
             }
         });
 
@@ -118,13 +179,26 @@ public class ReportFragment extends Fragment {
         columnModel.setColumnWidth(0, 200);
         tableView.setColumnModel(columnModel);
 
-
         FirebaseDatabase.getInstance().getReference("orders").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-
+                long total = 0;
                 for(DataSnapshot child : snapshot.getChildren()){
                     OrderModel order = child.getValue(OrderModel.class);
+                    if(!order.getStatus().equals(EnumOrderStatus.CLOSED.getName())) continue;
+                    try {
+                        DateFormat date = new SimpleDateFormat("dd-MM-yyyy");
+                        Date now = date.parse(date.format(new Date()));
+
+                        Date dt = date.parse(order.getDatetime());
+
+                        if(now.compareTo(dt) != 0){
+                            continue;
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
                     FirebaseDatabase.getInstance().getReference("products").child(order.getProduct_id()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull @NotNull DataSnapshot sn) {
@@ -138,7 +212,10 @@ public class ReportFragment extends Fragment {
                                     String.valueOf((product.getPrice() * order.getOrder_value()) - product.getDiscount())
                             };
                             reports.add(row);
-                            tableView.setDataAdapter(new SimpleTableDataAdapter(getContext(), reports));
+                            try{
+                                tableView.setDataAdapter(new SimpleTableDataAdapter(getContext(), reports));
+                            }catch (Exception e){}
+
                         }
 
                         @Override
@@ -146,8 +223,8 @@ public class ReportFragment extends Fragment {
 
                         }
                     });
-
                 }
+
             }
 
             @Override

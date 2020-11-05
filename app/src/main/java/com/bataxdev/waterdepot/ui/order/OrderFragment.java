@@ -88,6 +88,8 @@ public class OrderFragment extends Fragment {
                             }
                         });
 
+                    }else{
+                        continue;
                     }
                     orders.add(order);
                 }

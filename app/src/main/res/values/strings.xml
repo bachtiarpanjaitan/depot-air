@@ -1,5 +1,7 @@
 <resources>
     <string name="web_id_client">254196420315-jc84i4tj4jb3tmcgvdbugrqfrogtbhih.apps.googleusercontent.com</string>
+    <string name="default_notification_channel_id">1</string>
+    <string name="default_notification_channel_name">notification</string>
 
     <string name="app_name">Depot Air Online</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
