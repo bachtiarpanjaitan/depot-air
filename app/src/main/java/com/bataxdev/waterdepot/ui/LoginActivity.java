@@ -128,7 +128,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 users.child(user.getUid()).removeValue();
 
                                 UserModel user_model = new UserModel();
-                                user_model.setUsername(user.getDisplayName());
+                                user_model.setName(user.getDisplayName());
+                                user_model.setPhone(user.getPhoneNumber());
                                 user_model.setEmail(user.getEmail());
                                 user_model.setUid(user.getUid());
                                 user_model.setAdmin(false);

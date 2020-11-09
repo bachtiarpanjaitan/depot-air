@@ -6,9 +6,109 @@
         android:layout_height="match_parent"
         tools:context=".ui.profile.ProfileFragment">
 
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello"/>
+    <RelativeLayout android:layout_width="match_parent"
+                    android:padding="5dp"
+                    android:layout_height="match_parent">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:padding="10dp"
+                android:id="@+id/c_name"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingBottom="5dp"
+                    android:layout_height="wrap_content"
+                    android:text="Nama"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:ems="10"
+                    android:inputType="textMultiLine|text"
+                    android:background="@drawable/text_rounded"
+                    android:id="@+id/name"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:padding="10dp"
+                android:id="@+id/c_email"
+                android:layout_below="@+id/c_name"
+                android:layout_height="wrap_content">
+        <TextView
+                android:layout_width="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingBottom="5dp"
+                android:layout_height="wrap_content"
+                android:text="Email"/>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:ems="10"
+                android:inputType="textMultiLine|text"
+                android:background="@drawable/text_rounded"
+                android:id="@+id/email"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:padding="10dp"
+                android:id="@+id/c_address"
+                android:layout_below="@+id/c_email"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingBottom="5dp"
+                    android:layout_height="wrap_content"
+                    android:text="Alamat Pengiriman"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:inputType="textMultiLine"
+                    android:background="@drawable/text_rounded"
+                    android:lines = "5"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:id="@+id/address"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:padding="10dp"
+                android:id="@+id/c_no_telp"
+                android:layout_below="@+id/c_address"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingBottom="5dp"
+                    android:layout_height="wrap_content"
+                    android:text="No Telepon"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:inputType="phone"
+                    android:background="@drawable/text_rounded"
+                    android:id="@+id/no_telp"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:padding="10dp"
+                android:layout_below="@id/c_no_telp"
+                android:layout_height="wrap_content">
+            <Button
+                    android:text="Simpan Profil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_save_profile"/>
+        </LinearLayout>
+    </RelativeLayout>
 
 </FrameLayout>
