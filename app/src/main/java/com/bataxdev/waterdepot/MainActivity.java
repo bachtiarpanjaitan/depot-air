@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     navigationView.getMenu().findItem(R.id.nav_product).setVisible(false);
                     navigationView.getMenu().findItem(R.id.nav_order_list).setVisible(false);
                     navigationView.getMenu().findItem(R.id.nav_report).setVisible(false);
-//                    navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_user).setVisible(false);
                 }else{
                     navigationView.getMenu().findItem(R.id.nav_order).setVisible(false);
                     navigationView.getMenu().findItem(R.id.nav_profile).setVisible(false);

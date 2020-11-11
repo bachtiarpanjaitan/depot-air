@@ -51,7 +51,6 @@ public class OrderAdapter  extends RecyclerView.Adapter<OrderAdapter.ViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, final int position) {
-
         int order_value = orders.get(position).getOrder_value();
         String product_id = orders.get(position).getProduct_id();
         FirebaseDatabase.getInstance().getReference("products").child(product_id).addValueEventListener(new ValueEventListener() {

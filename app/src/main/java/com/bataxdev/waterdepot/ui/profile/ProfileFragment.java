@@ -13,18 +13,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.bataxdev.waterdepot.R;
 import com.bataxdev.waterdepot.data.model.UserModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.text.SimpleDateFormat;
 
 public class ProfileFragment extends Fragment {
 
     private ProfileViewModel mViewModel;
     private FirebaseUser user;
+    EditText address;
+    EditText phone;
+
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
     }
@@ -36,13 +40,14 @@ public class ProfileFragment extends Fragment {
 
         TextView name = view.findViewById(R.id.name);
         TextView email = view.findViewById(R.id.email);
-        EditText address = view.findViewById(R.id.address);
-        EditText phone = view.findViewById(R.id.no_telp);
+        address = view.findViewById(R.id.address);
+        phone = view.findViewById(R.id.no_telp);
         Button btn_save = view.findViewById(R.id.btn_save_profile);
 
         FirebaseDatabase.getInstance().getReference("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 String c_email = user.getEmail();
                 for(DataSnapshot child : snapshot.getChildren()){
@@ -52,7 +57,7 @@ public class ProfileFragment extends Fragment {
                        name.setText(item.getName());
                        email.setText(item.getEmail());
                        address.setText(item.getAddress());
-                       phone.setText(item.getAddress());
+                       phone.setText(item.getPhone());
                    }
                 }
             }
@@ -67,6 +72,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 simpan_profile();
+                getFragmentManager().popBackStack();
+
             }
         });
 
@@ -75,6 +82,14 @@ public class ProfileFragment extends Fragment {
     }
 
     private void simpan_profile() {
+        UserModel u_model = new UserModel();
+        u_model.setAddress(address.getText().toString());
+        u_model.setPhone(phone.getText().toString());
+        u_model.setName(user.getDisplayName());
+        u_model.setEmail(user.getEmail());
+        u_model.setUid(user.getUid());
+        u_model.setImage(user.getPhotoUrl().toString());
+       FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid()).setValue(u_model);
 
     }
 

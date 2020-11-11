@@ -41,6 +41,11 @@
             android:label="@string/report"/>
 
     <fragment
+            android:id="@+id/nav_user"
+            android:name="com.bataxdev.waterdepot.ui.user.UserFragment"
+            android:label="@string/user"/>
+
+    <fragment
             android:id="@+id/nav_setting"
             android:name="com.bataxdev.waterdepot.ui.setting.SettingsFragment"
             android:label="@string/menu_setting"/>

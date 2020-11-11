@@ -1,14 +1,17 @@
 package com.bataxdev.waterdepot.data.model;
 
+import android.net.Uri;
+
 public class UserModel {
 
-    private  String username;
-    private  String email;
-    private  boolean admin;
-    private String Uid;
-    private String address;
-    private String phone;
-    private String name;
+    private  String username = "";
+    private  String email = "";
+    private  boolean admin = false;
+    private String uid = "";
+    private String address = "";
+    private String phone = "";
+    private String name = "";
+    private String image = "";
 
     public String getUsername() {
         return username;
@@ -35,11 +38,11 @@ public class UserModel {
     }
 
     public String getUid() {
-        return Uid;
+        return uid;
     }
 
     public void setUid(String uid) {
-        Uid = uid;
+        this.uid = uid;
     }
 
     public String getAddress() {
@@ -61,8 +64,15 @@ public class UserModel {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

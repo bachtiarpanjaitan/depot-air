@@ -23,9 +23,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -125,15 +123,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                 DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users");
 
-                                users.child(user.getUid()).removeValue();
+                                //users.child(user.getUid()).removeValue();
 
                                 UserModel user_model = new UserModel();
                                 user_model.setName(user.getDisplayName());
                                 user_model.setPhone(user.getPhoneNumber());
                                 user_model.setEmail(user.getEmail());
                                 user_model.setUid(user.getUid());
+                                user_model.setImage(user.getPhotoUrl().toString());
                                 user_model.setAdmin(false);
-                                users.child(user.getUid()).setValue(user_model);
+
+                                users.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                                        if(!snapshot.exists())
+                                        {
+                                            users.child(user.getUid()).setValue(user_model);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                                    }
+                                });
 
                                 Intent main = new Intent(LoginActivity.this,MainActivity.class);
                                 startActivity(main);

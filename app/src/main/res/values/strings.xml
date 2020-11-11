@@ -53,4 +53,5 @@
     <string name="add_product">Tambah Produk</string>
     <string name="order_list">Daftar Pesanan</string>
     <string name="report">Laporan</string>
+    <string name="user">Pengguna</string>
 </resources>
