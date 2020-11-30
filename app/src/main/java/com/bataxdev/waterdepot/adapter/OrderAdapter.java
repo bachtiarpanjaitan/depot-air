@@ -20,6 +20,7 @@ import com.bataxdev.waterdepot.R;
 import com.bataxdev.waterdepot.data.Enumerable.EnumOrderStatus;
 import com.bataxdev.waterdepot.data.model.OrderModel;
 import com.bataxdev.waterdepot.data.model.ProductModel;
+import com.bataxdev.waterdepot.ui.order_detail.OrderDetailFragment;
 import com.bataxdev.waterdepot.ui.product_detail.ProductDetailFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -154,6 +155,18 @@ public class OrderAdapter  extends RecyclerView.Adapter<OrderAdapter.ViewHolder>
 
 
 
+                        }
+                    });
+
+                    holder.cv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Bundle  data = new Bundle();
+                            data.putString("ORDER_ID", orders.get(position).getKey());
+                            AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                            Fragment detailFragment = new OrderDetailFragment();
+                            detailFragment.setArguments(data);
+                            activity.getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, detailFragment).addToBackStack(null).commit();
                         }
                     });
                 }
