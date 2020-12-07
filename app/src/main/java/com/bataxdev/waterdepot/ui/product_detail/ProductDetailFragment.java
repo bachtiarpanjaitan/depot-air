@@ -2,6 +2,7 @@ package com.bataxdev.waterdepot.ui.product_detail;
 
 import android.app.Activity;
 import android.app.NotificationManager;
+import android.util.Log;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -33,6 +34,10 @@ import java.text.SimpleDateFormat;
 public class ProductDetailFragment extends Fragment {
 
     private ProductDetailViewModel mViewModel;
+    long kupon = 0;
+    int hasil = 0;
+    int sisa = 0;
+    boolean use_coupon = false;
 
     public static ProductDetailFragment newInstance() {
         return new ProductDetailFragment();
@@ -56,6 +61,12 @@ public class ProductDetailFragment extends Fragment {
         final TextView description = view.findViewById(R.id.description);
         final EditText order_number = view.findViewById(R.id.order_number);
         final Button order_now = view.findViewById(R.id.btn_order_now);
+        final Button btn_use_coupon = view.findViewById(R.id.btn_use_coupon);
+        final TextView total_kupon = view.findViewById(R.id.total_coupon);
+
+        order_number.setEnabled(true);
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         FirebaseDatabase.getInstance().getReference("products").child(product_id).addValueEventListener(new ValueEventListener() {
             @Override
@@ -69,6 +80,21 @@ public class ProductDetailFragment extends Fragment {
                 price.setText("Harga : Rp."+ product.getPrice());
                 discount.setText("Diskon : Rp."+ product.getDiscount());
                 description.setText(product.getDescription());
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
+        FirebaseDatabase.getInstance().getReference("coupons").child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                {
+                    total_kupon.setText(snapshot.child("value").getValue().toString());
+                }
             }
 
             @Override
@@ -93,6 +119,28 @@ public class ProductDetailFragment extends Fragment {
                     int value_order = Integer.parseInt(order_number.getText().toString());
                     if(has_edit == false) insert_order(value_order,product_id,v);
                     else update_order(value_order,order_id);
+                }
+            }
+        });
+
+        btn_use_coupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                kupon = Long.parseLong(total_kupon.getText().toString());
+
+                if(kupon < 10)
+                {
+                    Toast.makeText(getContext(), "Jumlah kupon tidak cukup",0).show();
+                }else {
+                    hasil = (int) (kupon/10);
+                    sisa = (int) (kupon - (hasil*10));
+                    Log.i("SISA", String.valueOf(sisa));
+                    total_kupon.setText(String.valueOf(sisa));
+                    order_number.setText(String.valueOf(hasil));
+
+                    order_number.setEnabled(false);
+                    use_coupon = true;
+
                 }
             }
         });
@@ -127,6 +175,7 @@ public class ProductDetailFragment extends Fragment {
             order.setProduct_id(product_id);
             order.setDatetime(ctime);
             order.setStatus(EnumOrderStatus.OPEN.getName());
+            order.setUse_coupon(use_coupon);
             database.push().setValue(order, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, @NonNull @NotNull DatabaseReference ref) {
@@ -139,6 +188,47 @@ public class ProductDetailFragment extends Fragment {
                     }
                 }
             });
+
+            FirebaseDatabase.getInstance().getReference("coupons").child(currentUser.getUid()).child("value").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    if(snapshot.exists())
+                    {
+                        Log.i("KUPON",snapshot.getValue().toString());
+                        long coupon = (long) snapshot.getValue();
+                        coupon += 1;
+                        snapshot.getRef().setValue(coupon);
+                    }else{
+                        snapshot.getRef().setValue(1);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                }
+            });
+
+            if(use_coupon)
+            {
+                FirebaseDatabase.getInstance().getReference("coupons").child(currentUser.getUid()).child("value").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                        if(snapshot.exists())
+                        {
+                            snapshot.getRef().setValue(sisa);
+                        }else{
+                            snapshot.getRef().setValue(1);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                    }
+                });
+            }
+
         }else{
             Toast.makeText(getContext(), "Tidak dapat membuat pesanan",0).show();
         }

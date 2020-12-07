@@ -1,7 +1,8 @@
 package com.bataxdev.waterdepot.ui.order_detail;
 
+import android.text.style.ClickableSpan;
 import android.util.Log;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -16,16 +17,16 @@ import com.bataxdev.waterdepot.data.model.ProductModel;
 import com.bataxdev.waterdepot.data.model.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Text;
 
 public class OrderDetailFragment extends Fragment {
 
     private OrderDetailViewModel mViewModel;
+    private DatabaseReference user;
+    private FirebaseUser currentUser;
+    private FirebaseAuth mAuth;
 
     public static OrderDetailFragment newInstance() {
         return new OrderDetailFragment();
@@ -42,8 +43,29 @@ public class OrderDetailFragment extends Fragment {
         TextView username = view.findViewById(R.id.username);
         TextView phone = view.findViewById(R.id.phone);
         TextView address = view.findViewById(R.id.address);
+        Button btn_rating = view.findViewById(R.id.btn_rating);
+        RatingBar rating = view.findViewById(R.id.ratingBar);
+        LinearLayout c_rating = view.findViewById(R.id.c_rating);
 
         final String order_id = getArguments().getString("ORDER_ID");
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        user = FirebaseDatabase.getInstance().getReference().child("users").child(currentUser.getUid());
+
+        user.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    c_rating.setVisibility(1);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
 
         FirebaseDatabase.getInstance().getReference("orders").child(order_id).addValueEventListener(new ValueEventListener() {
             @Override
@@ -96,6 +118,22 @@ public class OrderDetailFragment extends Fragment {
 
                         }
                     });
+
+                    FirebaseDatabase.getInstance().getReference("orders").child(order_id).child("ratings").child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                            if(snapshot.exists())
+                            {
+                                rating.setRating(((long) snapshot.child("value").getValue()));
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                        }
+                    });
+
                 }
 
 
@@ -107,6 +145,16 @@ public class OrderDetailFragment extends Fragment {
             }
         });
 
+        btn_rating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                float rating_value = rating.getRating();
+                FirebaseDatabase.getInstance().getReference("orders").child(order_id).child("ratings").child(currentUser.getUid()).child("value").setValue(rating_value);
+
+                Toast.makeText(getContext(), "Feedback berhasil di simpan.",0).show();
+
+            }
+        });
 
         return view;
     }

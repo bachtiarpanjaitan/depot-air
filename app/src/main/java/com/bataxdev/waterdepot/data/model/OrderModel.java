@@ -14,6 +14,7 @@ public class OrderModel implements Serializable {
     private String datetime;
     private String status;
     private String key;
+    private boolean use_coupon = false;
 
     public  OrderModel(
         String user_email,
@@ -21,7 +22,8 @@ public class OrderModel implements Serializable {
         String product_id,
         String datetime,
         String status,
-        String key
+        String key,
+        boolean use_coupon
     ){
         this.user_email = user_email;
         this.order_value = order_value;
@@ -29,6 +31,7 @@ public class OrderModel implements Serializable {
         this.datetime = datetime;
         this.status = status;
         this.key = key;
+        this.use_coupon = use_coupon;
     }
 
     public OrderModel() {}
@@ -41,6 +44,7 @@ public class OrderModel implements Serializable {
         result.put("datetime",datetime);
         result.put("status",status);
         result.put("key",key);
+        result.put("use_coupon",use_coupon);
         return result;
     }
 
@@ -86,6 +90,14 @@ public class OrderModel implements Serializable {
 
     public String getKey() {
         return key;
+    }
+
+    public void setUse_coupon(boolean use_coupon){
+        this.use_coupon = use_coupon;
+    }
+
+    public boolean getUse_coupon(){
+        return use_coupon;
     }
 
     public void setKey(String key) {

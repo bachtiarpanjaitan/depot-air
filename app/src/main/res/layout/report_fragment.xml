@@ -6,6 +6,7 @@
         android:layout_height="match_parent"
         android:overScrollMode="always"
         android:isScrollContainer="true"
+        android:background="@color/white"
         tools:context=".ui.report.ReportFragment">
 
     <LinearLayout

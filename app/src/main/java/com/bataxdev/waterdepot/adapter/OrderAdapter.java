@@ -77,6 +77,10 @@ public class OrderAdapter  extends RecyclerView.Adapter<OrderAdapter.ViewHolder>
                     if(product.getImage() != "" && !product.getImage().isEmpty()){
                         Picasso.get().load(product.getImage()).into(holder.product_order_image);
                     }
+
+                    if(orders.get(position).getUse_coupon()){
+                        holder.coupon.setVisibility(1);
+                    }
                     holder.options.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -204,6 +208,7 @@ public class OrderAdapter  extends RecyclerView.Adapter<OrderAdapter.ViewHolder>
         TextView status;
         TextView datetime;
         TextView options;
+        TextView coupon;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -215,6 +220,7 @@ public class OrderAdapter  extends RecyclerView.Adapter<OrderAdapter.ViewHolder>
             status = itemView.findViewById(R.id.order_status);
             datetime = itemView.findViewById(R.id.order_datetime);
             options = itemView.findViewById(R.id.option_order);
+            coupon = itemView.findViewById(R.id.order_coupon);
         }
     }
 }

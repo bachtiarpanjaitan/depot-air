@@ -43,6 +43,7 @@ public class ProfileFragment extends Fragment {
         address = view.findViewById(R.id.address);
         phone = view.findViewById(R.id.no_telp);
         Button btn_save = view.findViewById(R.id.btn_save_profile);
+        TextView kupon = view.findViewById(R.id.coupon);
 
         FirebaseDatabase.getInstance().getReference("users").addValueEventListener(new ValueEventListener() {
             @Override
@@ -58,6 +59,21 @@ public class ProfileFragment extends Fragment {
                        email.setText(item.getEmail());
                        address.setText(item.getAddress());
                        phone.setText(item.getPhone());
+
+                       FirebaseDatabase.getInstance().getReference("coupons").child(item.getUid()).addValueEventListener(new ValueEventListener() {
+                           @Override
+                           public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                               if(snapshot.exists())
+                               {
+                                   kupon.setText(snapshot.child("value").getValue().toString());
+                               }
+                           }
+
+                           @Override
+                           public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                           }
+                       });
                    }
                 }
             }
@@ -67,6 +83,8 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+
+
 
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override

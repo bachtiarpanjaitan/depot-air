@@ -161,6 +161,40 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/address"/>
             </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:id="@+id/c_rating"
+                    android:visibility="invisible"
+                    android:background="@drawable/text_rounded"
+                    android:layout_centerInParent="true"
+                    android:layout_below="@id/c_address"
+                    android:layout_height="match_parent">
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+
+                        android:layout_below="@id/c_address"
+                        android:layout_height="match_parent">
+
+                    <RatingBar
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/ratingBar"
+                            android:layout_gravity="center"
+                            android:numStars="5"
+                            android:saveEnabled="true"/>
+
+                    <Button
+                            android:text="Simpan Feedback"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/btn_rating"
+                            android:layout_gravity="center"
+                            android:layout_below="@+id/ratingBar"/>
+                </LinearLayout>
+            </LinearLayout>
         </RelativeLayout>
     </ScrollView>
 
