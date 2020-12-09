@@ -27,6 +27,10 @@
                 android:icon="@drawable/ic_account_circle"
                 android:title="@string/menu_profile"/>
         <item
+                android:id="@+id/nav_info"
+                android:icon="@drawable/ic_info"
+                android:title="Info"/>
+        <item
                 android:id="@+id/nav_report"
                 android:icon="@drawable/ic_report"
                 android:title="@string/report"/>
